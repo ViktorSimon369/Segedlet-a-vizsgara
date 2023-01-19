@@ -1,0 +1,295 @@
+hostname
+enable secret
+service password-encryption 
+line con 0
+password
+login
+exit 
+
+line vty 0 15 
+password (a jelszó ide)
+login 
+exit 
+
+security passwords min-length (szám)
+login block-for (idő) attempts (mennyiség) within (másodperc) 
+interface Gx/y
+ip address
+description (lan1es.portja)
+no shut 
+exit 
+
+ipv6 unicast-routing  
+int Gy/x
+ipv6 enable  
+ipv6 add
+no shut
+ip dhcp excluded-address
+ip dhcp pool (lan1-es) 
+network
+default-router 
+dns-server 
+exit 
+
+SSH:
+ip domain-name airport.com
+crypto key generate rsa
+ip ssh version 2 
+username admin privilege 15 password
+line vty 0 15
+login local 
+transport input ssh
+privilege level 15
+banner motd (#szöveg#)
+
+line vty 0 15
+password
+login
+
+hostname
+int vlan1
+ip add
+no shut
+exit
+ip default-gateway
+exit
+
+
+copy ru config
+
+hostname_egyes
+-------------------------
+en
+conf t
+hostname (switch neve)
+enable secret (jelszó)
+line con 0
+password (jelszó)
+login
+exit
+service password-encryption
+banner motd (#szöveg#)
+
+interface (pl vlan1)
+ip add (ipv4) (maszkja)
+no sh
+ip default-gateway (ipv4)
+exit
+copy ru st
+
+hostname_kettes
+-------------------------
+en
+conf t
+hostname (switch neve)
+enable secret (jelszó)
+line con 0
+password (jelszó)
+login
+exit
+service password-encryption
+banner motd (#szöveg#)
+
+interface (pl vlan1)
+ip add (ipv4) (maszkja)
+no sh
+ip default-gateway (ipv4)
+exit
+copy ru st
+
+hostname_hármas
+-------------------------
+en
+conf t
+hostname (switch neve)
+enable secret (jelszó)
+line con 0
+password (jelszó)
+login
+exit
+service password-encryption
+banner motd (#szöveg#)
+
+interface vlan1
+ip add (ipv4) (maszkja)
+no sh
+ip default-gateway (ipv4)
+exit
+
+copy ru st
+
+telnet (ipv4)
+
+A sWitch
+-------------------------
+en
+conf t
+hostname (A switch neve)
+
+line vty 0 15
+password (jelszó)
+login
+exit
+int (vlan1-re)
+ip add (ipv4) (maszkja)
+ip default-gateway (ipv4)
+service password-encryption
+banner motd (#szöveg#)
+exit
+conf t
+interface (rá aVlan1)
+ip add (ipv4) (maszkja)
+no sh
+ip default-gateway (ipv4)
+exit
+copy ru st
+
+----------
+Alapkonfig router:
+
+en
+conf t
+hostname (router neve)
+enable secret (jelszó)
+line console 0
+password (jelszó)
+login
+line vty 0 15
+password (jelszó)
+login
+service password-encryption
+banner motd ("szöveg")
+interface Gx/y
+ip address (ipv4) (maszkja)
+no sh
+----------
+Alapkonfig switch:
+
+en
+conf t
+hostname (switch neve)
+enable secret (jelszó)
+line console 0
+password (jelszó)
+login
+line vty 0 15
+password (jelszó)
+login
+service password-encryption
+banner motd "(szöveg")
+interface (vlan1-es)
+ip address (ipv4) (maszkja)
+no sh
+----------
+Alapkonfig+def switch:
+
+en
+conf t
+hostname (switch neve)
+enable secret (jelszó)
+line console 0
+password (jelszó)
+login
+line vty 0 15
+password (jelszó)
+login
+service password-encryption
+banner motd ("szöveg)"
+interface vlan1
+ip address (ipv4) (maszkja)
+ip default-getaway (ipv4)
+no sh
+-----------------
+IPv6 config (router-ről)
+
+en
+conf t
+ipv6 unicast-routing
+int Gx/y/z
+ipv6 enable
+ipv6 address (ipv6 per és az utáni szám)
+ipv6 add (ipv6 röv) link-local
+no sh
+-----------------
+IPv6 és IPv4 config (router-ről)
+
+en
+conf t
+hostname (A router neve)
+ipv6 unicast-routing
+int gX/Y/Z
+ipv6 enable
+ipv6 address (ipv6 és a peres szám)
+ipv6 add (ipv6 röv) link-local
+ip add (ipv4) (maszkja)
+no sh
+-----------------
+IPv6 és IPv4 config with pw(router-ről)
+
+en
+conf t
+hostname (router név)
+enable secret (jelszó)
+line console 0
+password (jelszó)
+login
+line vty 0 15
+password (jelszó)
+login
+service password-encryption
+banner motd (("szöveg"))
+ipv6 unicast-routing
+int gZ/Y/X
+ipv6 enable
+ipv6 address (ipv6 röv és per a szám)
+ipv6 add (ipv6 röv) link-local
+ip add (ipv4) (maszkja)
+no sh
+
+
+első router-nek beállításai 
+en
+conf t
+hostname (név)
+int gX/Y
+ip add (ipv4) (maszkja)
+no sh
+int sX/Z/Y
+ip add (ipv4) (maszkja)
+no sh
+exit
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
+
+
+második router-nek beállításai 
+en
+conf t
+hostname (név)
+int gZ/X
+ip add (ipv4) (maszkja)
+no sh
+int sX/Y/Z
+ip add (ipv4) (maszkja)
+no sh
+int sX/Y/Z
+ip add (ipv4) (maszkja)
+no sh
+exit
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
+
+
+harmadik router-nek beállításai 
+en
+conf t
+hostname (név)
+int gX/Y
+ip add (ipv4) (maszkja)
+no sh
+int sX/Y/Z
+ip add (ipv4) (maszkja)
+no sh
+exit
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
+ip route (ipv4 melyikről) (maszkja) (ipv4 hova)
